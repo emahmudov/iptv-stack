@@ -1,0 +1,53 @@
+{
+  "sources": [
+    {
+      "name": "iptv-org-country-az",
+      "url": "https://iptv-org.github.io/iptv/countries/az.m3u",
+      "enabled": true,
+      "weight": 100,
+      "tags": ["az"]
+    },
+    {
+      "name": "iptv-org-country-tr",
+      "url": "https://iptv-org.github.io/iptv/countries/tr.m3u",
+      "enabled": true,
+      "weight": 95,
+      "tags": ["tr"]
+    },
+    {
+      "name": "iptv-org-country-ru",
+      "url": "https://iptv-org.github.io/iptv/countries/ru.m3u",
+      "enabled": true,
+      "weight": 95,
+      "tags": ["ru"]
+    },
+    {
+      "name": "iptv-org-language-eng",
+      "url": "https://iptv-org.github.io/iptv/languages/eng.m3u",
+      "enabled": true,
+      "weight": 90,
+      "tags": ["en"]
+    },
+    {
+      "name": "iptv-org-category-sport",
+      "url": "https://iptv-org.github.io/iptv/categories/sports.m3u",
+      "enabled": true,
+      "weight": 85,
+      "tags": ["sport"]
+    },
+    {
+      "name": "iptv-org-category-movies",
+      "url": "https://iptv-org.github.io/iptv/categories/movies.m3u",
+      "enabled": true,
+      "weight": 85,
+      "tags": ["cinema"]
+    },
+    {
+      "name": "custom-kanal-top",
+      "url": "https://kanal.top/570.m3u8",
+      "enabled": true,
+      "weight": 80,
+      "tags": ["mixed"]
+    }
+  ]
+}

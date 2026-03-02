@@ -1,0 +1,17 @@
+{
+  "by_name": {
+    "CBC Sport": {
+      "country": "az",
+      "categories": ["sport"]
+    },
+    "AzTV": {
+      "country": "az",
+      "categories": ["news"]
+    },
+    "Idman TV": {
+      "country": "az",
+      "categories": ["sport"]
+    }
+  },
+  "by_url": {}
+}

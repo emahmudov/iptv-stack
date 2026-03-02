@@ -1,0 +1,76 @@
+{
+  "fetch": {
+    "timeout_seconds": 25,
+    "workers": 8
+  },
+  "healthcheck": {
+    "enabled": true,
+    "timeout_seconds": 7,
+    "workers": 40,
+    "max_urls": 0,
+    "strict_m3u8": true,
+    "verify_segment": true,
+    "require_checked": true
+  },
+  "channel_selection": {
+    "drop_dead_streams": true,
+    "prefer_https": true,
+    "keep_per_channel": 2
+  },
+  "groups": {
+    "countries": [
+      {
+        "id": "az",
+        "title": "Azerbaijan",
+        "source_tags": ["az"],
+        "keywords": ["aztv", "itv", "ictimai", "xezar", "xazar", "arb", "real tv", "medeniyyet", "idman", "space", "baku tv", "cbc", "azerbaijan", "азербайджан", "идман", "мədəniyyət"],
+        "tlds": [".az"]
+      },
+      {
+        "id": "tr",
+        "title": "Turkey",
+        "source_tags": ["tr"],
+        "keywords": ["turkiye", "turkish", "kanal d", "trt", "star tv", "show tv", "atv"],
+        "tlds": [".tr"]
+      },
+      {
+        "id": "ru",
+        "title": "Russia",
+        "source_tags": ["ru"],
+        "keywords": ["rossiya", "russia", "perviy", "перв", "россия", "нтв", "твц", "рентв"],
+        "tlds": [".ru"]
+      },
+      {
+        "id": "en",
+        "title": "English",
+        "source_tags": ["en", "eng"],
+        "keywords": ["english", "uk", "usa", "cnn", "bbc", "fox", "sky"],
+        "tlds": [".uk", ".us"]
+      }
+    ],
+    "categories": [
+      {
+        "id": "sport",
+        "title": "Sport",
+        "source_tags": ["sport"],
+        "keywords": ["sport", "football", "soccer", "uefa", "fifa", "boxing", "mma", "basket", "tennis", "motogp", "formula"]
+      },
+      {
+        "id": "cinema",
+        "title": "Cinema",
+        "source_tags": ["cinema", "movies"],
+        "keywords": ["movie", "cinema", "film", "kino", "kino", "series", "serial"]
+      },
+      {
+        "id": "news",
+        "title": "News",
+        "keywords": ["news", "xabar", "xeber", "haber", "inform", "инфо", "новости"]
+      },
+      {
+        "id": "kids",
+        "title": "Kids",
+        "keywords": ["kids", "cartoon", "cocuk", "дети", "мульт", "disney", "nick"]
+      }
+    ]
+  }
+}
