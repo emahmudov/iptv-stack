@@ -52,6 +52,25 @@ Bu sətri əlavə et:
 0 */6 * * * cd /Users/elvin/Desktop/projects/iptv-stack && ./scripts/build.sh >> /Users/elvin/Desktop/projects/iptv-stack/dist/cron.log 2>&1
 ```
 
+## GitHub Actions + GitHub Pages (TV ucun en rahat yol)
+
+Repo-da workflow var:
+
+- `.github/workflows/build-and-deploy.yml`
+- her `6 saatdan bir` ve manual run-da `./scripts/build.sh` isleyir
+- `dist/` neticesini `GitHub Pages`-e deploy edir
+
+Bir defe ac:
+
+1. GitHub repo -> `Settings` -> `Pages`
+2. `Source: GitHub Actions` sec
+3. Sonra `Actions` bolmesinden `Build And Deploy IPTV` workflow-unu bir defe `Run workflow` et
+
+Sabit URL formatlari:
+
+- Playlist: `https://emahmudov.github.io/iptv-stack/all.m3u`
+- Portal: `https://emahmudov.github.io/iptv-stack/portal/index.html`
+
 ## Konfiqurasiya
 
 - `config/sources.json`: source URL-lər, prioritet (`weight`), tag-lər.
