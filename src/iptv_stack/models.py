@@ -37,7 +37,9 @@ class StreamEntry:
     status_code: Optional[int] = None
     latency_ms: Optional[int] = None
     check_error: str = ""
+    check_level: int = 0
     score: float = 0.0
+    fallback_urls: List[str] = field(default_factory=list)
 
     def normalized_name(self) -> str:
         return normalize_text(self.name)
@@ -45,8 +47,18 @@ class StreamEntry:
     def normalized_group(self) -> str:
         return normalize_text(self.group_title)
 
+    def dedup_key(self) -> str:
+        return f"{self.country}::{self.normalized_name()}"
+
     def stable_key(self) -> str:
         return f"{self.normalized_name()}::{self.url.strip()}"
+
+    def tier(self) -> str:
+        if self.check_level >= 2:
+            return "strict"
+        if self.check_level >= 1:
+            return "relaxed"
+        return "dead"
 
     def to_dict(self) -> Dict[str, object]:
         return {
@@ -62,6 +74,8 @@ class StreamEntry:
             "status_code": self.status_code,
             "latency_ms": self.latency_ms,
             "check_error": self.check_error,
+            "check_level": self.check_level,
+            "tier": self.tier(),
             "score": self.score,
             "tvg_id": self.extinf_attrs.get("tvg-id", ""),
             "tvg_name": self.extinf_attrs.get("tvg-name", ""),

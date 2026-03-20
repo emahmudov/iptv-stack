@@ -68,7 +68,7 @@ def build_portal(channels_json_path: Path, output_html_path: Path, title: str) -
     }}
     .controls {{
       display: grid;
-      grid-template-columns: 1fr repeat(2, minmax(150px, 220px));
+      grid-template-columns: 1fr repeat(3, minmax(130px, 200px));
       gap: 10px;
       margin-bottom: 14px;
     }}
@@ -119,6 +119,16 @@ def build_portal(channels_json_path: Path, output_html_path: Path, title: str) -
       font-size: 11px;
       margin-right: 6px;
       margin-bottom: 4px;
+    }}
+    .tier-strict {{
+      background: rgba(34, 197, 94, 0.2);
+      color: #86efac;
+      border-color: rgba(34, 197, 94, 0.4);
+    }}
+    .tier-relaxed {{
+      background: rgba(250, 204, 21, 0.15);
+      color: #fde68a;
+      border-color: rgba(250, 204, 21, 0.3);
     }}
     a {{
       color: #a5f3fc;
@@ -171,7 +181,7 @@ def build_portal(channels_json_path: Path, output_html_path: Path, title: str) -
   <div class="wrap">
     <section class="hero">
       <h1>{title}</h1>
-      <p>Auto-generated playlist portal. Filter channels by name, country and category.</p>
+      <p>Auto-generated playlist portal. Filter channels by name, country, category and tier.</p>
     </section>
     <div class="controls">
       <input id="search" type="search" placeholder="Search channel..." />
@@ -181,25 +191,35 @@ def build_portal(channels_json_path: Path, output_html_path: Path, title: str) -
       <select id="categoryFilter">
         <option value="">All categories</option>
       </select>
+      <select id="tierFilter">
+        <option value="">All tiers</option>
+        <option value="strict">Strict</option>
+        <option value="relaxed">Relaxed</option>
+      </select>
     </div>
     <div class="footer-links">
-      <a href="../all.m3u">Download all.m3u</a>
+      <a href="../all.m3u">Download all.m3u (relaxed)</a>
+      <a href="../strict/all.m3u">Download strict.m3u</a>
+      <a href="../by-country/all.m3u">All by-country</a>
+      <a href="../by-category/all.m3u">All by-category</a>
       <a href="../by-country/az.m3u">AZ list</a>
       <a href="../by-country/tr.m3u">TR list</a>
       <a href="../by-country/ru.m3u">RU list</a>
       <a href="../by-country/en.m3u">EN list</a>
       <a href="../by-category/sport.m3u">Sport list</a>
       <a href="../by-category/cinema.m3u">Cinema list</a>
+      <a href="../reports/verification-report.json">Verification report</a>
     </div>
     <div class="stats" id="stats"></div>
     <div style="overflow:auto; max-height: 68vh;">
       <table>
         <thead>
           <tr>
-            <th style="width: 28%;">Name</th>
-            <th style="width: 10%;">Country</th>
-            <th style="width: 16%;">Category</th>
-            <th style="width: 18%;">Source</th>
+            <th style="width: 25%;">Name</th>
+            <th style="width: 8%;">Country</th>
+            <th style="width: 14%;">Category</th>
+            <th style="width: 8%;">Tier</th>
+            <th style="width: 17%;">Source</th>
             <th style="width: 16%;">Stream</th>
             <th style="width: 12%;">Health</th>
           </tr>
@@ -215,6 +235,7 @@ def build_portal(channels_json_path: Path, output_html_path: Path, title: str) -
     const searchEl = document.getElementById("search");
     const countryEl = document.getElementById("countryFilter");
     const categoryEl = document.getElementById("categoryFilter");
+    const tierEl = document.getElementById("tierFilter");
 
     const countries = [...new Set(CHANNELS.map((c) => c.country).filter(Boolean))].sort();
     const categories = [...new Set(CHANNELS.flatMap((c) => c.categories || []).filter(Boolean))].sort();
@@ -237,15 +258,19 @@ def build_portal(channels_json_path: Path, output_html_path: Path, title: str) -
 
     function rowHtml(item) {{
       const tags = (item.categories || []).map((cat) => `<span class="chip">${{cat}}</span>`).join("");
-      const healthy = item.alive === true ? "OK" : (item.alive === false ? "Fail" : "Unknown");
+      const tier = item.tier || "relaxed";
+      const tierClass = tier === "strict" ? "tier-strict" : "tier-relaxed";
+      const tierLabel = tier[0].toUpperCase() + tier.slice(1);
+      const levelInfo = item.check_level !== undefined ? ` (L${{item.check_level}})` : "";
       const button = item.url ? `<button class="button" onclick="copyUrl('${{item.url.replace(/'/g, "\\\\'")}}')">Copy URL</button>` : `<button class="button" disabled>No URL</button>`;
       return `<tr>
         <td>${{item.name || "-"}}</td>
         <td>${{(item.country || "other").toUpperCase()}}</td>
         <td>${{tags}}</td>
+        <td><span class="chip ${{tierClass}}">${{tierLabel}}${{levelInfo}}</span></td>
         <td>${{item.source_name || "-"}}</td>
         <td><a href="${{item.url}}" target="_blank" rel="noreferrer">Open</a> ${{button}}</td>
-        <td>${{healthy}}</td>
+        <td>L${{item.check_level || 0}} / ${{item.latency_ms ? item.latency_ms + "ms" : "-"}}</td>
       </tr>`;
     }}
 
@@ -253,6 +278,7 @@ def build_portal(channels_json_path: Path, output_html_path: Path, title: str) -
       const q = searchEl.value.trim().toLowerCase();
       const country = countryEl.value;
       const category = categoryEl.value;
+      const tier = tierEl.value;
 
       const filtered = CHANNELS.filter((item) => {{
         if (q) {{
@@ -261,14 +287,17 @@ def build_portal(channels_json_path: Path, output_html_path: Path, title: str) -
         }}
         if (country && item.country !== country) return false;
         if (category && !(item.categories || []).includes(category)) return false;
+        if (tier && item.tier !== tier) return false;
         return true;
       }});
 
       rowsEl.innerHTML = filtered.map(rowHtml).join("");
-      statsEl.textContent = `Showing ${{filtered.length}} / ${{CHANNELS.length}} channels`;
+      const strictCount = filtered.filter(c => c.tier === "strict").length;
+      const relaxedCount = filtered.filter(c => c.tier === "relaxed").length;
+      statsEl.textContent = `Showing ${{filtered.length}} / ${{CHANNELS.length}} channels (${{strictCount}} strict, ${{relaxedCount}} relaxed)`;
     }}
 
-    [searchEl, countryEl, categoryEl].forEach((el) => el.addEventListener("input", render));
+    [searchEl, countryEl, categoryEl, tierEl].forEach((el) => el.addEventListener("input", render));
     render();
   </script>
 </body>

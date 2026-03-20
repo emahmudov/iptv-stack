@@ -8,6 +8,20 @@
       "tags": ["az"]
     },
     {
+      "name": "iptv-org-language-aze",
+      "url": "https://iptv-org.github.io/iptv/languages/aze.m3u",
+      "enabled": true,
+      "weight": 100,
+      "tags": ["az"]
+    },
+    {
+      "name": "community-az-playlist",
+      "url": "https://gist.githubusercontent.com/rauf038/56298a1cf2d0132f3fb0b774334b3a78/raw/AZ_Playlist.m3u",
+      "enabled": true,
+      "weight": 95,
+      "tags": ["az"]
+    },
+    {
       "name": "iptv-org-country-tr",
       "url": "https://iptv-org.github.io/iptv/countries/tr.m3u",
       "enabled": true,

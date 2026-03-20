@@ -5,17 +5,20 @@
   },
   "healthcheck": {
     "enabled": true,
-    "timeout_seconds": 7,
-    "workers": 40,
-    "max_urls": 0,
-    "strict_m3u8": true,
-    "verify_segment": true,
-    "require_checked": true
+    "timeout_seconds": 12,
+    "workers": 50,
+    "retries": 2,
+    "retry_sleep_seconds": 0.5,
+    "max_fallbacks": 3
+  },
+  "tiers": {
+    "strict_min_level": 2,
+    "relaxed_min_level": 1
   },
   "channel_selection": {
-    "drop_dead_streams": true,
     "prefer_https": true,
-    "keep_per_channel": 2
+    "keep_per_channel": 1,
+    "max_fallback_urls": 4
   },
   "groups": {
     "countries": [
@@ -23,13 +26,15 @@
         "id": "az",
         "title": "Azerbaijan",
         "source_tags": ["az"],
-        "keywords": ["aztv", "itv", "ictimai", "xezar", "xazar", "arb", "real tv", "medeniyyet", "idman", "space", "baku tv", "cbc", "azerbaijan", "азербайджан", "идман", "мədəniyyət"],
+        "tvg_id_suffixes": [".az"],
+        "keywords": ["aztv", "az tv", "ictimai", "ictimai tv", "itv.az", "xezar", "xazar", "arb 24", "arb gunes", "arb tv", "real tv", "medeniyyet", "idman", "space tv", "baku tv", "cbc sport", "azerbaijan", "азербайджан", "идман", "мədəniyyət", "kapaz", "kanal s"],
         "tlds": [".az"]
       },
       {
         "id": "tr",
         "title": "Turkey",
         "source_tags": ["tr"],
+        "tvg_id_suffixes": [".tr"],
         "keywords": ["turkiye", "turkish", "kanal d", "trt", "star tv", "show tv", "atv"],
         "tlds": [".tr"]
       },
@@ -37,6 +42,7 @@
         "id": "ru",
         "title": "Russia",
         "source_tags": ["ru"],
+        "tvg_id_suffixes": [".ru"],
         "keywords": ["rossiya", "russia", "perviy", "перв", "россия", "нтв", "твц", "рентв"],
         "tlds": [".ru"]
       },
@@ -44,6 +50,7 @@
         "id": "en",
         "title": "English",
         "source_tags": ["en", "eng"],
+        "tvg_id_suffixes": [".uk", ".us", ".gb"],
         "keywords": ["english", "uk", "usa", "cnn", "bbc", "fox", "sky"],
         "tlds": [".uk", ".us"]
       }
@@ -53,13 +60,13 @@
         "id": "sport",
         "title": "Sport",
         "source_tags": ["sport"],
-        "keywords": ["sport", "football", "soccer", "uefa", "fifa", "boxing", "mma", "basket", "tennis", "motogp", "formula"]
+        "keywords": ["sport", "football", "soccer", "uefa", "fifa", "boxing", "mma", "basket", "tennis", "motogp", "formula", "setanta", "eurosport", "bein", "match tv", "espn"]
       },
       {
         "id": "cinema",
         "title": "Cinema",
         "source_tags": ["cinema", "movies"],
-        "keywords": ["movie", "cinema", "film", "kino", "kino", "series", "serial"]
+        "keywords": ["movie", "cinema", "film", "kino", "series", "serial", "hbo", "paramount", "warner", "pixar"]
       },
       {
         "id": "news",

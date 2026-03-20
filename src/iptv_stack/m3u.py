@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, Iterable, List
+from typing import Dict, Iterable, List, Optional
 import re
 
 from .models import StreamEntry
@@ -62,12 +62,37 @@ def parse_m3u(text: str, source_name: str, source_weight: int, source_tags: List
     return entries
 
 
-def render_m3u(entries: Iterable[StreamEntry], title: str = "My IPTV List") -> str:
+def render_m3u(
+    entries: Iterable[StreamEntry],
+    title: str = "My IPTV List",
+    group_override: str = "",
+) -> str:
     lines = [f'#EXTM3U x-tvg-url="" x-playlist-name="{title}"']
     for entry in entries:
         attrs = dict(entry.extinf_attrs)
-        if entry.group_title:
+        if group_override:
+            attrs["group-title"] = group_override
+        elif entry.group_title:
             attrs["group-title"] = entry.group_title
+        if entry.extinf_attrs.get("tvg-name", "").strip() == "":
+            attrs["tvg-name"] = entry.name
+
+        attr_blob = " ".join(f'{k}="{v}"' for k, v in sorted(attrs.items()) if v is not None)
+        lines.append(f"#EXTINF:-1 {attr_blob},{entry.name}")
+        lines.append(entry.url)
+    return "\n".join(lines) + "\n"
+
+
+def render_m3u_country_grouped(
+    entries: Iterable[StreamEntry],
+    country_titles: Dict[str, str],
+    title: str = "My IPTV List",
+) -> str:
+    """Render m3u where group-title is just the country name (e.g. 'Azerbaijan')."""
+    lines = [f'#EXTM3U x-tvg-url="" x-playlist-name="{title}"']
+    for entry in entries:
+        attrs = dict(entry.extinf_attrs)
+        attrs["group-title"] = country_titles.get(entry.country, entry.country.title())
         if entry.extinf_attrs.get("tvg-name", "").strip() == "":
             attrs["tvg-name"] = entry.name
 

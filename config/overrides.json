@@ -4,6 +4,10 @@
       "country": "az",
       "categories": ["sport"]
     },
+    "CBC Sport [Geo-blocked]": {
+      "country": "az",
+      "categories": ["sport"]
+    },
     "AzTV": {
       "country": "az",
       "categories": ["news"]
@@ -11,6 +15,26 @@
     "Idman TV": {
       "country": "az",
       "categories": ["sport"]
+    },
+    "Idman Hd Az": {
+      "country": "az",
+      "categories": ["sport"]
+    },
+    "ITV Deportes": {
+      "country": "other",
+      "categories": ["sport"]
+    },
+    "CBC News (1080p)": {
+      "country": "en"
+    },
+    "CBC TV8 (1080p) [Not 24/7]": {
+      "country": "other"
+    },
+    "LHCAZTV": {
+      "country": "en"
+    },
+    "NBC 6 Santa Barbara CA (KSBY) (720p)": {
+      "country": "en"
     }
   },
   "by_url": {}
