@@ -1,0 +1,32 @@
+name: Keepalive
+
+# GitHub disables scheduled workflows after 60 days of repo inactivity.
+# This workflow prevents that by making a lightweight commit every 50 days.
+
+on:
+  schedule:
+    - cron: "0 12 1,15 * *"  # 1st and 15th of every month at noon UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Update keepalive timestamp
+        run: |
+          echo "Last keepalive: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" > .keepalive
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .keepalive
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: keepalive [skip ci]"
+            git push
+          fi

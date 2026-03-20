@@ -12,7 +12,6 @@ on:
       - "config/**"
       - "scripts/**"
       - ".github/workflows/build-and-deploy.yml"
-      - "README.md"
 
 permissions:
   contents: read
@@ -38,6 +37,23 @@ jobs:
 
       - name: Build playlists and portal
         run: ./scripts/build.sh
+
+      - name: Show build summary
+        if: always()
+        run: |
+          if [ -f dist/build-report.json ]; then
+            echo "### Build Report" >> $GITHUB_STEP_SUMMARY
+            echo '```json' >> $GITHUB_STEP_SUMMARY
+            python3 -c "
+          import json
+          data = json.load(open('dist/build-report.json'))
+          stats = data.get('stats', {})
+          print(json.dumps(stats, indent=2))
+          " >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### Build failed - no report generated" >> $GITHUB_STEP_SUMMARY
+          fi
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
