@@ -313,6 +313,22 @@ def build_dataset(
     )
     print(f"[2/7] Classified {len(raw_entries)} entries")
 
+    # Step 2.5: Filter NSFW/adult content
+    nsfw_keywords = [
+        "xxx", "porn", "erotic", "playboy", "penthouse", "hustler",
+        "brazzers", "redlight", "18+", "nude", "naked", "sexo",
+        "kamasutra", "spice", "xtime", "babestation",
+    ]
+    before_nsfw = len(raw_entries)
+    raw_entries = [
+        e for e in raw_entries
+        if not any(kw in e.normalized_name() for kw in nsfw_keywords)
+        and not any(kw in normalize_text(e.group_title) for kw in nsfw_keywords)
+    ]
+    nsfw_removed = before_nsfw - len(raw_entries)
+    if nsfw_removed:
+        print(f"       Removed {nsfw_removed} NSFW channels")
+
     # Step 3: Pre-score
     for entry in raw_entries:
         entry.score = pre_score_entry(entry, prefer_https=prefer_https)
